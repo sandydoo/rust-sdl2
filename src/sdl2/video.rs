@@ -1232,6 +1232,12 @@ impl WindowBuilder {
         self
     }
 
+    /// Sets the window to always be on top of the others. (>= SDL 2.0.16)
+    pub fn always_on_top(&mut self) -> &mut WindowBuilder {
+        self.window_flags |= sys::SDL_WindowFlags::SDL_WINDOW_ALWAYS_ON_TOP as u32;
+        self
+    }
+
     /// Sets the window to have grabbed input focus.
     pub fn input_grabbed(&mut self) -> &mut WindowBuilder {
         self.window_flags |= sys::SDL_WindowFlags::SDL_WINDOW_INPUT_GRABBED as u32;
@@ -1482,6 +1488,11 @@ impl Window {
         0 != self.window_flags() & sys::SDL_WindowFlags::SDL_WINDOW_MINIMIZED as u32
     }
 
+    /// Is the window always on top?
+    pub fn is_always_on_top(&self) -> bool {
+        0 != self.window_flags() & sys::SDL_WindowFlags::SDL_WINDOW_ALWAYS_ON_TOP as u32
+    }
+
     #[doc(alias = "SDL_SetWindowTitle")]
     pub fn set_title(&mut self, title: &str) -> Result<(), NulError> {
         let title = CString::new(title)?;
@@ -1687,6 +1698,20 @@ impl Window {
             } else {
                 Err(get_error())
             }
+        }
+    }
+
+    #[doc(alias = "SDL_SetWindowAlwaysOnTop")]
+    pub fn set_always_on_top(&mut self, on_top: bool) {
+        unsafe {
+            sys::SDL_SetWindowAlwaysOnTop(
+                self.context.raw,
+                if on_top {
+                    sys::SDL_bool::SDL_TRUE
+                } else {
+                    sys::SDL_bool::SDL_FALSE
+                },
+            )
         }
     }
 
