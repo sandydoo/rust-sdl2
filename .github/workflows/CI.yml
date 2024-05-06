@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-13, ubuntu-latest, windows-latest]
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
       matrix:
         feature: ["", "static-link"]
         build_mode: ["", "--release"]
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-13, ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
       - name: Build SDL2
