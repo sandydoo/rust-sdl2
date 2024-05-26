@@ -29,7 +29,8 @@ jobs:
           cargo --version
           cargo build --features "${CI_BUILD_FEATURES}"
           cargo build --examples --features "${CI_BUILD_FEATURES}"
-          cargo test --features "${CI_BUILD_FEATURES}" -- --list | sed -n 's/^\([^:]*\): test$/\1/p' | xargs -I {} cargo test --features "${CI_BUILD_FEATURES}" -- --exact {}
+          cargo test --lib --examples --features "${CI_BUILD_FEATURES}"
+          ls tests | sed -n 's/^\(.*\)\.rs$/\1/p' | xargs -I {} cargo test --features "${CI_BUILD_FEATURES}" {}
   build-bundled:
     name: build bundled
     runs-on: ${{ matrix.os }}
@@ -53,8 +54,8 @@ jobs:
           cargo --version
           cargo build --features "${CI_BUILD_FEATURES} ${{matrix.feature}}" ${{matrix.build_mode}}
           cargo build --examples --features "${CI_BUILD_FEATURES} ${{matrix.feature}}" ${{matrix.build_mode}}
-          # cargo test --features "${CI_BUILD_FEATURES} ${{matrix.feature}}" ${{matrix.build_mode}}
-          cargo test --features "${CI_BUILD_FEATURES} ${{matrix.feature}}" ${{matrix.build_mode}} -- --list | sed -n 's/^\([^:]*\): test$/\1/p' | xargs -I {} cargo test --features "${CI_BUILD_FEATURES} ${{matrix.feature}}" ${{matrix.build_mode}} -- --exact {}
+          cargo test --lib --examples --features "${CI_BUILD_FEATURES} ${{matrix.feature}}" ${{matrix.build_mode}}
+          ls tests | sed -n 's/^\(.*\)\.rs$/\1/p' | xargs -I {} cargo test --features "${CI_BUILD_FEATURES} ${{matrix.feature}}" ${{matrix.build_mode}} {}
 
   build-linux:
     name: build linux pkg-config
